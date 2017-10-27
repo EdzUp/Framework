@@ -1,0 +1,51 @@
+GLvoid ReSizeGLScene(GLsizei width, GLsizei height)             // Resize And Initialize The GL Window
+{
+    if (height==0)                              // Prevent A Divide By Zero By
+    {
+        height=1;                           // Making Height Equal One
+    }
+ 
+    glViewport(0, 0, width, height);                    // Reset The Current Viewport
+
+    glMatrixMode(GL_PROJECTION);                        // Select The Projection Matrix
+    glLoadIdentity();                           // Reset The Projection Matrix
+ 
+    // Calculate The Aspect Ratio Of The Window
+    gluPerspective(45.0f,(GLfloat)width/(GLfloat)height,0.1f,100.0f);
+ 
+    glMatrixMode(GL_MODELVIEW);                     // Select The Modelview Matrix
+    glLoadIdentity();                           // Reset The Modelview Matrix
+}
+/*
+Try this reshape function. It will preserve your aspect ratio, resize the 
+object, and make the viewport to be centralize.
+*/
+
+// initial window screen size
+int WIDTH = 400;
+int HEIGHT = 300;
+
+// reshape function, call with glutReshapeFunc(reshape) in your main function
+void reshape(int width, int height) {
+    const float ar_origin = (float) WIDTH / (float) HEIGHT;
+    const float ar_new = (float) width / (float) height;
+
+    float scale_w = (float) width / (float) WIDTH;
+    float scale_h = (float) height / (float) HEIGHT;
+    if (ar_new > ar_origin) {
+        scale_w = scale_h;
+    } else {
+        scale_h = scale_w;
+    }
+
+    float margin_x = (width - WIDTH * scale_w) / 2;
+    float margin_y = (height - HEIGHT * scale_h) / 2;
+
+    glViewport(margin_x, margin_y, WIDTH * scale_w, HEIGHT * scale_h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, WIDTH / ar_origin, 0, HEIGHT / ar_origin, 0, 1.0);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity() ;
+}
